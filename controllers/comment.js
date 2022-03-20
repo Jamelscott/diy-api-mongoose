@@ -7,20 +7,27 @@ const router = require('express').Router()
 
 //GET - view a single blog post
 router.get('/:id', async (req, res)=>{
+try{
 
-    const {id} = req.params
-    console.log(id)
+  const {id} = req.params
+// console.log(id)
+  const blog = await db.User.findOne({
+    "comments._id": id
+  })
+  // console.log(blog)
 
-    db.User.findById(id)
-    .then(user=>{
-        console.log(user)
-        if(!user)return res.status(404).json({message: "user not found"})
-            res.json(user)
-    })
-    .catch(err=>{
-        console.log(err)
-        res.json({comment: "what happened"})
-    })
+const comment = await blog.comments.id(id)
+    
+console.log(comment)
+res.json(comment)
+
+
+
+
+} catch (err){
+  console.log(err)
+}
+
 })
 
 //PUT -- updates a comment @ :id
